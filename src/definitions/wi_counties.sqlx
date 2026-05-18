@@ -1,0 +1,9 @@
+config {
+  type: "table",
+  name: "wi_counties"
+}
+
+CREATE OR REPLACE TABLE `sound-dialect-435221-g0.p8.wi_counties` AS
+SELECT *
+FROM `bigquery-public-data.geo_us_boundaries.counties`
+WHERE state_fips_code = '55'

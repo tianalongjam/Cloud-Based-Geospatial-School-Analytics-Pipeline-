@@ -1,0 +1,10 @@
+config {
+  type: "operations",
+  name: "schools",
+  hasOutput: true
+}
+
+LOAD DATA OVERWRITE `sound-dialect-435221-g0.p8.schools` FROM FILES (
+  format = 'PARQUET',
+  uris = ['gs://p8-tianalongjam/wi-schools-raw.parquet']
+)
