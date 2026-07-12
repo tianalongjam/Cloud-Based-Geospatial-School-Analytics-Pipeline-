@@ -60,6 +60,23 @@ Once `wi_county_schools` exists, SQL is used to answer:
 - How many times a given query could run before exhausting BigQuery's free-tier data-processing allowance
 - For every public middle school in a given county, the closest public high school by geographic distance (`ST_DISTANCE` + `MIN_BY`)
 
+## Questions Answered in the Notebook
+
+The notebook (`src/p.ipynb`) is organized around ten specific questions that validate each stage of the pipeline, from infrastructure setup through final analysis:
+
+| # | Question | What it verifies |
+|---|---|---|
+| Q1 | What is the VM's OS release? | Read `/etc/os-release` to confirm the correct OS image |
+| Q2 | What CPUs does the VM have? | Ran `lscpu` via `subprocess` to confirm VM specs |
+| Q3 | What files/directories exist at the top level of the bucket? | Verified the raw Parquet file was uploaded to GCS |
+| Q4 | What is the modification time (ns) of the uploaded raw file? | Confirmed the GCS upload and its metadata |
+| Q5 | What are the dependencies between all Dataform tables? | Programmatically extracted the compiled dependency graph (`schools`, `wi_counties` → `wi_county_schools`) |
+| Q6 | How many counties are in Wisconsin? | Sanity-checked the `wi_counties` table |
+| Q7 | How many public schools are there in Wisconsin? | Sanity-checked the joined `wi_county_schools` table |
+| Q8 | Which counties have at least 2 cities that each contain 3+ public high schools? | Multi-stage aggregation written in BigQuery pipe syntax |
+| Q9 | How many times can the Q8 query run before exhausting the BigQuery free tier? | Read `total_bytes_processed` from the query job to estimate cost |
+| Q10 | For each public middle school in a given county, what is the geographically closest public high school? | Self-join + `ST_DISTANCE`/`MIN_BY` for nearest-neighbor analysis |
+
 ## Technologies Used
 
 - **Compute:** GCP Compute Engine VM (Ubuntu), accessed via SSH
